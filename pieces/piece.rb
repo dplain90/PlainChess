@@ -44,7 +44,7 @@ module SteppablePiece
     def moves
       candidate_moves = []
 
-      directions.values.each do |direction|
+      self.directions.values.each do |direction|
         candidate_moves += move_dirs(position, direction)
       end
 
@@ -102,7 +102,9 @@ class Piece
 
   def valid_moves
     candidate_moves = {}
-    self.set_directions if self.is_a?(Pawn)
+    if self.is_a?(Pawn)
+      color == :white ? self.directions = @white_directions : self.directions = @black_directions
+    end
     moves.each { |move| candidate_moves[move] = true }
     candidate_moves
   end

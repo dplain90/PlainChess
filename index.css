@@ -1,0 +1,24 @@
+.board {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: inherit;
+  flex-direction: row;
+}
+
+.colHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 400;
+}
+
+.space {
+  height: 10px;
+  width: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -70,7 +70,8 @@ class Board
   end
 
   def valid_piece_move!(start_pos, end_pos)
-    raise InvalidMoveError.new "That piece can't move there!" if !self[start_pos].valid_moves[end_pos]
+  
+    raise InvalidMoveError.new "That piece can't move there! #{self[start_pos].valid_moves}" if !self[start_pos].valid_moves[end_pos]
   end
 
   def moving_own_piece!(pos, color)
