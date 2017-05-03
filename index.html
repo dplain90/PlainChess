@@ -94,8 +94,11 @@
   <script type="text/javascript">
     class Board {
       constructor() {
+        this.main = document.getElementsByClassName('main')[0];
         this.move = [];
         this.grid = [];
+        this.clearErrors = this.clearErrors.bind(this);
+        this.displayWinner = this.displayWinner.bind(this);
         this.populateSpaces = this.populateSpaces.bind(this);
         this.updateMove = this.updateMove.bind(this);
         this.sendMove = this.sendMove.bind(this);
@@ -125,12 +128,40 @@
       }
 
       receiveMove(response) {
-        let {start_val, end_val} = response;
-        this.updateValue(this.move[0], start_val);
-        this.updateValue(this.move[1], end_val);
-        this.move = [];
+        if(response.errors === ""){
+          let {start_val, end_val} = response;
+          if(response.winner !== ""){
+            this.displayWinner(response.winner);
+          } else {
+          this.updateValue(this.move[0], start_val);
+          this.updateValue(this.move[1], end_val);
+          this.clearErrors();
+          this.move = [];
+          }
+        } else {
+          this.clearErrors();
+          let errors = document.createElement("div");
+          errors.className = "errors";
+          errors.textContent = response.errors;
+          this.main.append(errors);
+          this.move = [];
+        }
       }
 
+      displayWinner(message){
+        let winningEl = document.createElement("h1");
+        winningEl.className = "winner";
+        winningEl.textContent = message;
+        this.main.append(winningEl);
+      }
+
+      clearErrors() {
+        let errorMessages = document.getElementsByClassName('errors');
+        if (errorMessages.length !== 0) {
+          debugger
+          errorMessages[0].remove();
+        }
+      }
       updateValue(pos, val) {
         let x = pos[0];
         let y = pos[1];

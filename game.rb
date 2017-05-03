@@ -16,14 +16,34 @@ class Game
     @current_player = @p1
   end
 
+  def game_over?
+    if self.black_checkmated?
+      return "White wins!"
+    elsif self.white_checkmated?
+      return "Black wins!"
+    else
+      return ""
+    end
+  end
+
   def play_move(move)
-    start_pos, end_pos = move
-    board.move_piece(move, current_player.color)
-    swap_turn!
-    return {
-      'start_val' => self.board[start_pos].to_str,
-      'end_val' => self.board[end_pos].to_str
+    begin
+      start_pos, end_pos = move
+      board.move_piece(move, current_player.color)
+      swap_turn!
+      winner = game_over?
+      puts "This is winner: #{winner}"
+      return {
+        'start_val' => self.board[start_pos].to_str,
+        'end_val' => self.board[end_pos].to_str,
+        'errors' => "",
+        'winner' => winner
       }
+    rescue WrongColorError, NoStartPieceError, InvalidMoveError, InCheckError => e
+      return {
+        'errors' => e.message
+      }
+    end
   end
 
   def play
@@ -43,15 +63,17 @@ class Game
     notify_players
   end
 
-
-  private
   def black_checkmated?
-    board.checkmate?(:black)
+    puts @board.checkmate?(:black)
+    @board.checkmate?(:black)
   end
 
   def white_checkmated?
-    board.checkmate?(:white)
+    puts @board.checkmate?(:white)
+    @board.checkmate?(:white)
   end
+
+  private
 
   def notify_players
     if black_checkmated?

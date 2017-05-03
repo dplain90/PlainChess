@@ -31,7 +31,7 @@ class Pawn < Piece
   def set_directions
     color == :white ? self.directions = @white_directions.dup : self.directions = @black_directions.dup
     starting_row = color == :white ? 1 : 6
-    puts @black_directions
+
     self.directions.each do |direction, increment|
 
       incr_pos = calculate_new_position(position, increment)
