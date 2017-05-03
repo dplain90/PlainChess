@@ -158,7 +158,6 @@
       clearErrors() {
         let errorMessages = document.getElementsByClassName('errors');
         if (errorMessages.length !== 0) {
-          debugger
           errorMessages[0].remove();
         }
       }
@@ -190,8 +189,10 @@
         }
 
         this.spaceEl = document.getElementsByClassName(`${x}-${y}`)[0];
+        console.log(x);
+        console.log(y);
         this.setValue = this.setValue.bind(this);
-        this.spaceEl.addEventListener('click', board.updateMove([this.pos.x, this.pos.y]));
+        this.spaceEl.addEventListener('click', board.updateMove([x, y]));
       }
 
       setValue(val){

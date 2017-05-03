@@ -69,11 +69,12 @@ class Board
   end
 
   def valid_piece_move!(start_pos, end_pos)
+    puts self[start_pos].valid_moves
     raise InvalidMoveError.new "That piece can't move there! #{self[start_pos].valid_moves}" if !self[start_pos].valid_moves[end_pos]
   end
 
   def moving_own_piece!(pos, color)
-    raise WrongColorError.new "That is not your piece!" if color_of_position(pos) != color
+    raise WrongColorError.new "That is not your piece!" if !in_bounds?(pos) || color_of_position(pos) != color
   end
 
   def has_piece!(pos)
@@ -107,7 +108,7 @@ class Board
   end
 
   def in_check?(color)
-    king = find_king(color)
+    king = find_king(color).first
     Piece.all_moves(king.enemy_color).include?(king.position)
   end
 
@@ -144,7 +145,7 @@ class Board
       color = side.last
       grid[row_idx].each_index do |col_idx|
         self[[row_idx, col_idx]] = Pawn.new(:p, board, color)
-        self[[row_idx, col_idx]].set_directions
+
       end
     end
 

@@ -1,7 +1,6 @@
 require_relative 'piece'
 
 class Bishop < Piece
-  include SlidablePiece
   attr_reader :directions, :color, :board
 
   def initialize(symbol, board, color)

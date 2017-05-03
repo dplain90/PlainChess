@@ -27,9 +27,9 @@ class Pawn < Piece
     end
   end
 
-  def candidates(pos, dir, results)
+  def candidates(pos, dir, results = [])
     new_pos = calc_new_pos(pos, dir)
-    return [] if off_board? || same_color?(new_pos)
+    return [] if off_board?(new_pos) || same_color?(new_pos)
 
     if dir.first == (2 || -2)
       position.first == start_row ? [new_pos] : []

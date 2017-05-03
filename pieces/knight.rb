@@ -17,9 +17,9 @@ class Knight < Piece
      }
   end
 
-  def candidates(pos, dir, results)
+  def candidates(pos, dir, results = [])
     new_pos = calc_new_pos(pos, dir)
-    off_board? || same_color?(new_pos) ? [] : [new_pos]
+    off_board?(new_pos) || same_color?(new_pos) ? [] : [new_pos]
   end
 
 end
