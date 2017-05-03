@@ -42,11 +42,34 @@ Front-End
 
 After the HTML is populated via Rack, events and AJAX calls are managed by two classes, Board & Space. Upon the initial render, a Board class is instantiated which conducts a nested loop to populate each DOM element with an instantiation of the Space class. The Space class sets up and handles the onClick events and holds it's designated DOM element as a prop. 
 
-When instantiated each Space is also given the Board object in it's constructor. This allows for the onClick callback to be handled by the Board class which waits until both a starting position and ending position have been collected before sending an AJAX request to the back-end to update the grid. 
-  
+When instantiated each Space is also given the Board object in it's constructor. This allows for the onClick callback to be handled by the Board class which waits until both a starting position and ending position have been collected before sending an AJAX request to the back-end to update the grid:
+
+```
+updateMove(newPos){
+        return (e) => {
+          this.move.push(newPos);
+          if(this.move.length > 1){
+            this.sendMove();
+          }
+        }
+      }
+ ```
+ 
 Once a response is received, the two Space objects that will change call their setValue function which updates their DOM element's textContent to it's new value. By pinpointing these two objects, re-rendering is minimized to the bare-minimum. If errors are sent back in the AJAX response, they are appended to the board's container.
 
+```
+updateValue(pos, val) {
+        let x = pos[0];
+        let y = pos[1];
+        this.grid[x][y].setValue(val);
+      }
 
+setValue(val){
+        this.spaceEl.textContent = val;
+      }
+ ```
+ 
+ 
 Todos
 -----
 
