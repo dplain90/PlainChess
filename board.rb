@@ -53,8 +53,7 @@ class Board
   def move_piece(pos, color)
     start_pos, end_pos = pos
     validate_move!(start_pos, end_pos, color)
-    self[end_pos] = self[start_pos]
-    self[start_pos] = NullPiece.instance
+    swap!(start_pos, end_pos)
   end
 
   def validate_move!(start_pos, end_pos, color)
@@ -66,11 +65,10 @@ class Board
 
   def not_in_check!(start_pos, end_pos, color)
     raise InCheckError.new "Can't do that because of check!" if
-    determine_if_checked(start_pos, end_pos, color)
+    result_in_check(start_pos, end_pos, color)
   end
 
   def valid_piece_move!(start_pos, end_pos)
-
     raise InvalidMoveError.new "That piece can't move there! #{self[start_pos].valid_moves}" if !self[start_pos].valid_moves[end_pos]
   end
 
@@ -82,29 +80,35 @@ class Board
     raise NoStartPieceError.new "This space has no piece!" if self[pos].is_a?(NullPiece)
   end
 
-  def determine_if_checked(starting_pos, new_pos, color)
-    mock_board = board.deep_dup
-    mock_board[starting_pos], mock_board[new_pos] = NullPiece.instance, mock_board[starting_pos]
-    mock_board.in_check?(color)
+  def result_in_check(pos, new_pos, color)
+    swap!(pos, new_pos)
+    outcome = in_check?(color)
+    swap!(new_pos, pos)
+    outcome
+  end
+
+  def swap!(pos, new_pos)
+    self[new_pos] = self[pos]
+    self[pos] = NullPiece.instance
   end
 
   def safe_moves?(piece)
-    piece.moves.any? {|move| !determine_if_checked(piece.position, move, piece.color) }
+    piece.moves.any? do |move|
+      !result_in_check(piece.position, move, piece.color)
+    end
+  end
+
+  def enemy_color(color)
+    color == :white ? :black : :white
   end
 
   def checkmate?(color)
-    color == :black ? enemy_color = :white : enemy_color = :black
-    my_pieces = gather_all_pieces(color)
-    return false if my_pieces.any? { |piece| safe_moves?(piece) }
-    return true if in_check?(color)
+    !all_pieces(color).any?{ |piece| safe_moves?(piece)}  && in_check?(color)
   end
 
   def in_check?(color)
-    color == :black ? enemy_color = :white : enemy_color = :black
-    enemy_pieces = gather_all_pieces(enemy_color)
-    enemy_moves = get_all_moves(enemy_pieces)
-    king_pos = find_king(color).position
-    enemy_moves.include?(king_pos)
+    king = find_king(color)
+    Piece.all_moves(king.enemy_color).include?(king.position)
   end
 
   def get_all_moves(pieces)
@@ -115,38 +119,12 @@ class Board
     result
   end
 
-  def gather_all_pieces(color)
-    result = []
-    self.grid.each do |row|
-      row_result = row.select{|piece| piece.color == color }
-      result.concat(row_result)
-    end
-
-    result
-  end
-
-  def deep_dup
-    result = []
-    board.grid.each do |row|
-      result << row.dup.map{ |piece| piece.is_a?(NullPiece) ? NullPiece.instance : piece.dup }
-    end
-    dup_board = Board.new
-    dup_board.grid = result
-    dup_board.grid.each_with_index do |row, row_idx|
-      row.each_with_index do |col, col_idx|
-        piece = dup_board.grid[row_idx][col_idx]
-        piece.board = dup_board
-      end
-    end
-
-    dup_board
+  def all_pieces(color)
+    Piece.all_pieces(color)
   end
 
   def find_king(color)
-    board.grid.each do |row|
-      king = row.select{|piece| piece.is_a?(King) && piece.color == color}
-      return king.first unless king.empty?
-    end
+    all_pieces(color).select{|piece| piece.is_a?(King)}
   end
 
   def find_board
@@ -155,8 +133,6 @@ class Board
       return board.first unless board.empty?
     end
   end
-
-
 
   def self.default_grid
     Array.new(8) { Array.new(8) }
@@ -238,19 +214,3 @@ end
 
 class InCheckError < ArgumentError
 end
-
-# board = Board.new
-#
-# new_king = King.new(:k, board, :black)
-# new_queen = Queen.new(:q, board, :white)
-# new_rook = Rook.new(:r, board, :white)
-#
-#
-# board.grid[2][0] = new_king
-# board.grid[3][0] = new_rook
-#
-# p new_rook.moves
-# #
-# board.display.render
-# p board.checkmate?(:black)
-# p new_king.moves

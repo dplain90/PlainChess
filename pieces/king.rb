@@ -1,7 +1,6 @@
 require_relative 'piece'
 
 class King < Piece
-  include SteppablePiece
   attr_reader :directions, :color, :board
 
   def initialize(symbol, board, color)
@@ -16,6 +15,11 @@ class King < Piece
       diag_right_up: [-1, 1],
       diag_right_down: [1, 1]
      }
+  end
+
+  def candidates(pos, dir, results)
+    new_pos = calc_new_pos(pos, dir)
+    off_board? || same_color?(new_pos) ? [] : [new_pos]
   end
 
 end

@@ -3,7 +3,6 @@ require_relative 'piece'
 
 
 class Rook < Piece
-  include SlidablePiece
   attr_reader :directions, :color, :board
 
   def initialize(symbol, board, color)
