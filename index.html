@@ -189,8 +189,6 @@
         }
 
         this.spaceEl = document.getElementsByClassName(`${x}-${y}`)[0];
-        console.log(x);
-        console.log(y);
         this.setValue = this.setValue.bind(this);
         this.spaceEl.addEventListener('click', board.updateMove([x, y]));
       }

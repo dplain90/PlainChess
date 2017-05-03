@@ -112,14 +112,6 @@ class Board
     Piece.all_moves(king.enemy_color).include?(king.position)
   end
 
-  def get_all_moves(pieces)
-    result = []
-    pieces.each do |piece|
-      result.concat(piece.moves)
-    end
-    result
-  end
-
   def all_pieces(color)
     Piece.all_pieces(color)
   end
@@ -145,10 +137,8 @@ class Board
       color = side.last
       grid[row_idx].each_index do |col_idx|
         self[[row_idx, col_idx]] = Pawn.new(:p, board, color)
-
       end
     end
-
   end
 
   def populate_other_pieces
