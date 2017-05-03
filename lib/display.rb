@@ -20,9 +20,6 @@ class Display
       6 => 'G',
       7 => 'H'
     }
-
-
-
   end
 
   def reset_move

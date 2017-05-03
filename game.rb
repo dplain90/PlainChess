@@ -1,6 +1,6 @@
-require_relative 'display'
-require_relative 'board'
-require_relative 'player'
+require_relative './lib/display'
+require_relative './lib/board'
+require_relative './lib/player'
 
 require 'byebug'
 require 'rack'
@@ -32,7 +32,6 @@ class Game
       board.move_piece(move, current_player.color)
       swap_turn!
       winner = game_over?
-      puts "This is winner: #{winner}"
       return {
         'start_val' => self.board[start_pos].to_str,
         'end_val' => self.board[end_pos].to_str,
@@ -64,12 +63,10 @@ class Game
   end
 
   def black_checkmated?
-    puts @board.checkmate?(:black)
     @board.checkmate?(:black)
   end
 
   def white_checkmated?
-    puts @board.checkmate?(:white)
     @board.checkmate?(:white)
   end
 
