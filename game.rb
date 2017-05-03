@@ -93,13 +93,12 @@ require 'rack'
 
 
 def generate_html(board)
-
   index = File.open('index.html')
   index_arr = index.read.split('<body>')
   index.close
   return [index_arr[0], '<body>', board ,'</div>', index_arr[1]].join
 end
-# html_str = game.display.render
+
 game = Game.new
 not_rendered = 0
 app = Proc.new do |env|
@@ -111,7 +110,6 @@ app = Proc.new do |env|
     move = JSON.parse(req.body.read)["move"]
     res.write(JSON.generate(game.play_move(move)))
     res.finish
-  # elsif not_rendered == true
 elsif not_rendered == 0
     not_rendered += 1
     res['Content-Type'] = 'text/html'
@@ -119,7 +117,6 @@ elsif not_rendered == 0
 
     res.write(my_test)
     res.finish
-    # not_rendered = false
   else
     res['Content-Type'] = 'text/html'
     indexPage = File.open('index.html')
@@ -128,12 +125,6 @@ elsif not_rendered == 0
     res.finish
   end
 end
-
-# app = Rack::Builder.new do
-#   use Rack::Static, :urls => ["/css", "/images", "/js"], :root => "public"
-#   run app
-# end.to_app
-
 
 Rack::Server.start(
 app: app,
