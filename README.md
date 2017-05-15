@@ -20,7 +20,7 @@ Back-End
 
  Candidate moves for each piece on the board are provided by iterating over predefined sets of x,y increments for each class of piece, and then recursively compiling applicable positions.
 
-```
+```ruby
  def moves
     self.directions
       .values
@@ -32,7 +32,7 @@ Back-End
 Moves is responsible for iterating over each potential direction a piece can go and calling the candidates method.
 
 
-```
+```ruby
  def candidates(pos, dir, results = [])
     pos = calc_new_pos(pos, dir) if pos == position
     return results if off_board?(pos) || same_color?(pos)
@@ -51,7 +51,7 @@ After the HTML is populated via Rack, events and AJAX calls are managed by two c
 
 When instantiated each Space is also given the Board object in it's constructor. This allows for the onClick callback to be handled by the Board class which waits until both a starting position and ending position have been collected before sending an AJAX request to the back-end to update the grid:
 
-```
+```javascript
 updateMove(newPos){
         return (e) => {
           this.move.push(newPos);
@@ -64,7 +64,7 @@ updateMove(newPos){
 
 Once a response is received, the two Space objects that will change call their setValue function which updates their DOM element's textContent to it's new value. By pinpointing these two objects, re-rendering is minimized to the bare-minimum. If errors are sent back in the AJAX response, they are appended to the board's container.
 
-```
+```javascript
 updateValue(pos, val) {
         let x = pos[0];
         let y = pos[1];

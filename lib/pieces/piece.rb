@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Piece
   @@black_pieces = []
   @@white_pieces = []

@@ -1,4 +1,3 @@
-require 'byebug'
 require_relative 'pieces/piece'
 require_relative 'display'
 require_relative 'pieces/bishop'
