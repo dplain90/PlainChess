@@ -8,8 +8,6 @@ require_relative 'pieces/pawn'
 require_relative 'pieces/queen'
 require_relative 'pieces/rook'
 
-
-
 class Board
   attr_accessor :grid, :display
 
@@ -133,6 +131,7 @@ class Board
   end
 
   def populate_pawns
+
     pawn_rows = [[1, :black],[-2, :white]].each do |side|
       row_idx = side.first
       color = side.last
@@ -143,8 +142,8 @@ class Board
   end
 
   def populate_other_pieces
+    side = [[0, :black],[-1, :white]]
     # side = [[0, :white],[-1, :black]]
-    side = [[0, :black], [-1, :white]]
       side.each do |side|
         row_idx = side.first
         color = side.last
