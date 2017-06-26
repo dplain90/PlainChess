@@ -125,7 +125,14 @@ elsif not_rendered == 0
   end
 end
 
+builder = Rack::Builder.new do
+  use Rack::Static, :urls => ["/assets/css", "/assets/images"]
+  run app
+end
+
+
+
 Rack::Server.start(
-app: app,
+app: builder,
 Port: 3000
 )
