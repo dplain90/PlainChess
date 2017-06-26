@@ -133,7 +133,7 @@ class Board
   end
 
   def populate_pawns
-    pawn_rows = [[1, :white],[-2, :black]].each do |side|
+    pawn_rows = [[1, :black],[-2, :white]].each do |side|
       row_idx = side.first
       color = side.last
       grid[row_idx].each_index do |col_idx|
@@ -143,7 +143,8 @@ class Board
   end
 
   def populate_other_pieces
-    side = [[0, :white],[-1, :black]]
+    # side = [[0, :white],[-1, :black]]
+    side = [[0, :black], [-1, :white]]
       side.each do |side|
         row_idx = side.first
         color = side.last

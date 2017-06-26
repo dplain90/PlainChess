@@ -12,7 +12,7 @@ class Game
     @display = Display.new(@board)
     @p1 = Player.new(:black)
     @p2 = Player.new(:white)
-    @current_player = @p1
+    @current_player = @p2
   end
 
   def game_over?
@@ -32,8 +32,8 @@ class Game
       swap_turn!
       winner = game_over?
       return {
-        'start_val' => self.board[start_pos].to_str,
-        'end_val' => self.board[end_pos].to_str,
+        'start_val' => self.board[start_pos].to_img,
+        'end_val' => self.board[end_pos].to_img,
         'errors' => "",
         'winner' => winner
       }

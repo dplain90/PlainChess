@@ -6,7 +6,7 @@ TOP_BANNER = "
     <h2 class=\"banner-title plain\">Plain</h2>
     <img src=\"/assets/images/chess-stage-main.png\"> </img>
     <h2 class=\"banner-title chess\">Chess</h2>
-    <div class=\"messages errors\"></div>
+    <div id=\"messages\"></div>
   </div>
 "
 

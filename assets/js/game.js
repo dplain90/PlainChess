@@ -18,13 +18,14 @@ class Space {
   }
 
   setValue(val){
-    this.spaceEl.textContent = val;
+    this.spaceEl.innerHTML = val;
   }
 }
 
 class Board {
   constructor() {
     this.main = document.getElementsByClassName('main')[0];
+    this.messages = document.getElementById('messages');
     this.move = [];
     this.grid = [];
     this.clearErrors = this.clearErrors.bind(this);
@@ -72,7 +73,7 @@ class Board {
       let errors = document.createElement("div");
       errors.className = "errors";
       errors.textContent = response.errors;
-      this.main.append(errors);
+      this.messages.append(errors);
       this.move = [];
     }
   }
@@ -81,7 +82,7 @@ class Board {
     let winningEl = document.createElement("h1");
     winningEl.className = "winner";
     winningEl.textContent = message;
-    this.main.append(winningEl);
+    this.messages.append(winningEl);
   }
 
   clearErrors() {

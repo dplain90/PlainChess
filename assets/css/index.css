@@ -115,8 +115,24 @@ body {
   align-items: flex-start;
   justify-content: center;
 }
+.errors {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  padding-left: 15px;
+  padding-top: 5px;
+}
 
-.messages {
+#p {
+  height: 70%;
+  width: auto;
+}
+
+#r, #h, #b, #k, #q {
+  transform: scale(.9);
+}
+
+
+#messages {
   display: flex;
   flex-direction: column;
   border-radius: 4px;
@@ -125,12 +141,13 @@ body {
   background-color: #FBF7E5;
   max-height: 300px;
   margin-top: 25px;
+  padding-top: 15px;
   height: 100%;
 }
 
 div.space:hover {
   border: 1px solid #3E4371;
-  /*background-color: #aaa;*/
+
   cursor: pointer;
 }
 .space {

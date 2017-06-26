@@ -30,9 +30,14 @@ class Piece
   def to_img
     return "" if symbol == :n
     "
-    <img src=\"/assets/images/#{self.to_str}-#{color.to_s}.png\">
+    <img id=\"#{self.to_str}\" src=\"/assets/images/#{self.to_str}-#{color.to_s}.png\">
     </img>
     "
+  end
+
+  def img_path
+    return "" if symbol == :n
+    "\"/assets/images/#{self.to_str}-#{color.to_s}.png\""
   end
 
   def same_color?(pos)
