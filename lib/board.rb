@@ -8,6 +8,8 @@ require_relative 'pieces/pawn'
 require_relative 'pieces/queen'
 require_relative 'pieces/rook'
 
+
+
 class Board
   attr_accessor :grid, :display
 

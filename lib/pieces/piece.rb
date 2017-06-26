@@ -27,6 +27,14 @@ class Piece
     end
   end
 
+  def to_img
+    return "" if symbol == :n
+    "
+    <img src=\"/assets/images/#{self.to_str}-#{color.to_s}.png\">
+    </img>
+    "
+  end
+
   def same_color?(pos)
     board.color_of_position(pos) == @color
   end
