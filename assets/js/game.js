@@ -10,6 +10,11 @@ class Space {
     this.spaceEl = document.getElementsByClassName(`${x}-${y}`)[0];
     this.setValue = this.setValue.bind(this);
     this.spaceEl.addEventListener('click', board.updateMove([x, y]));
+    if((x + y + 2) % 2 === 0){
+      this.spaceEl.classList.add("white");
+    } else {
+      this.spaceEl.classList.add("black");
+    }
   }
 
   setValue(val){

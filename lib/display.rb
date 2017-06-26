@@ -6,6 +6,7 @@ TOP_BANNER = "
     <h2 class=\"banner-title plain\">Plain</h2>
     <img src=\"/assets/images/chess-stage-main.png\"> </img>
     <h2 class=\"banner-title chess\">Chess</h2>
+    <div class=\"messages errors\"></div>
   </div>
 "
 
@@ -27,7 +28,7 @@ class Display
   end
 
   def letter_keys
-    top_header = "<div class='board main'>"
+    top_header = "<div class='main'>"
     top_header_nums = (0..7).to_a.map do |num|
       "<div class='colHeader'>#{@grid_letters[num]}</div>"
     end
@@ -43,7 +44,13 @@ class Display
   def render
 
     board.grid.each_with_index do |row, row_idx|
-      @html_response << "<div class='row'><div class='rowHeader'>#{row_idx}</div>#{board_row(row, row_idx)}</div>"
+      @html_response << "
+      <div class='row'>
+        <div class='rowHeader'>
+          #{8 - row_idx}
+        </div>
+        #{board_row(row, row_idx)}
+      </div>"
     end
     @html_response << letter_keys
     @html_response

@@ -6,6 +6,7 @@ html {
 }
 
 body {
+  background-color: #F4F0DC;
   display: flex;
   height: 100%;
   width: 100%;
@@ -62,18 +63,19 @@ body {
 
 .board.main {
   width: 484px;
+  margin: 0px;
 
 }
 
 .row {
-  width: 484px;
+  width: auto;
 
   display: inherit;
   flex-direction: row;
 }
 
 .topHeader {
-  width: 484px;
+  width: auto;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -85,35 +87,63 @@ body {
   display: flex;
   flex-direction: row;
   font-weight: 400;
-  height: 52px;
-  width: 52px;
+  height: 60px;
+  width: 60px;
+  font-family: 'Bungee Hairline', cursive;
+  font-size: 36px;
+  color: #3E4371;
+}
+
+.white {
+
+}
+
+.black {
+  background-color: #90D7B9;
 }
 
 .rowHeader {
   align-items: center;
   justify-content: flex-end;
 }
+.main {
+  margin-top: 0px;
+}
 
 .colHeader {
-  align-items: flex-end;
+
+  align-items: flex-start;
   justify-content: center;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  width: 100%;
+  border: 2px solid #9B251F;
+  background-color: #FBF7E5;
+  max-height: 300px;
+  margin-top: 25px;
+  height: 100%;
 }
 
 div.space:hover {
-  background-color: #aaa;
+  border: 1px solid #3E4371;
+  /*background-color: #aaa;*/
   cursor: pointer;
 }
 .space {
-  border: 1px solid black;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
 }
 
 .space img {
-  height: 50px;
+  height: 60px;
   width: auto;
 
 }
