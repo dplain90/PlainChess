@@ -24,23 +24,23 @@ body {
   position: absolute;
   z-index: 1000;
   font-family: 'Bungee', cursive;
-  font-size: 72px;
+  font-size: 48px;
   color: #9B251F;
 
 }
 
 .banner-title.plain {
-  left: -35px;
+  right: 56%;
 
 }
 
 .banner-title.chess {
-  right: -20px;
+  left: 56%;
 
 }
 .banner {
   margin-right: 60px;
-
+  margin-left: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -52,6 +52,7 @@ body {
 .banner img {
   width: 100%;
   height: auto;
+
 }
 .board {
   margin-top: 5%;
@@ -163,4 +164,26 @@ div.space:hover {
   height: 60px;
   width: auto;
 
+}
+@media (max-width: 600px) {
+  #messages {
+    position: absolute;
+    display: none;
+  }
+
+  .rowHeader {
+    width: 20px;
+  }
+
+  div.banner {
+    position: absolute;
+    display: none;
+  }
+
+  .board {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  
 }
