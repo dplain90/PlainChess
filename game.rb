@@ -126,7 +126,7 @@ elsif not_rendered == 0
 end
 
 builder = Rack::Builder.new do
-  use Rack::Static, :urls => ["/assets/css", "/assets/images"]
+  use Rack::Static, :urls => ["/assets/css", "/assets/images", "/assets/js"]
   run app
 end
 
