@@ -52,6 +52,7 @@ class Board {
     const data = { move: this.move }
 
     xhr.onload = () => {
+
       this.receiveMove(JSON.parse(xhr.response));
     }
     xhr.send(JSON.stringify(data));
@@ -59,15 +60,16 @@ class Board {
 
   receiveMove(response) {
     if(response.errors === ""){
-      let {start_val, end_val, engine_start, engine_end, engine_pos_start, engine_pos_end} = response;
+      let {start_val, end_val, engine_start, engine_end, engine_pos_start, engine_pos_end, players} = response;
       if(response.winner !== ""){
         this.displayWinner(response.winner);
       } else {
-      this.updateValue(this.move[0], start_val);
-      this.updateValue(this.move[1], end_val);
-      this.updateValue(engine_pos_start, engine_start);
-      this.updateValue(engine_pos_end, engine_end);
-
+        this.updateValue(this.move[0], start_val);
+        this.updateValue(this.move[1], end_val);
+        if(players === 1) {
+          this.updateValue(engine_pos_start, engine_start);
+          this.updateValue(engine_pos_end, engine_end);
+        }
       this.clearErrors();
       this.move = [];
       }
@@ -112,4 +114,30 @@ class Board {
   }
 }
 
-let officialBoard = new Board();
+class IOConsole {
+  constructor(board){
+    this.board = board;
+    this.messages = document.getElementById('messages');
+    this.consoleIO = document.querySelector('#console');
+
+    this.consoleIO.addEventListener('keypress',function(e) {
+      let key = e.which || e.keyCode;
+      if (key === 13) {
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = "document";
+        xhr.open('GET', e.currentTarget.value);
+        xhr.onload = () => {
+          window.location = xhr.responseURL;
+          console.log(xhr);
+          console.log(xhr.response);
+        }
+        xhr.send();
+      }
+    });
+  }
+
+
+}
+
+let board = new Board();
+let gameConsole = new IOConsole(board);

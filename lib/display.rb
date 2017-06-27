@@ -4,9 +4,27 @@ require 'json'
 TOP_BANNER = "
   <div class=\"banner\">
     <h2 class=\"banner-title plain\">Plain</h2>
-    <img src=\"/assets/images/chess-stage-main.png\"> </img>
+    <img src=\"/assets/images/castle.png\"> </img>
     <h2 class=\"banner-title chess\">Chess</h2>
-    <div id=\"messages\"></div>
+    <div id=\"messages\">
+      <div class=\"bottom-console\">
+        <input type=\"text\" id=\"console\"></input>
+        <ul class=\"instructions\">
+          <li>
+            <div class=\"command title\"> /1p </div>
+            <div class=\"command\">1 player game</div>
+          </li>
+          <li>
+            <div class=\"command title\"> /2p </div>
+            <div class=\"command\">2 player game</div>
+          </li>
+          <li>
+            <div class=\"command title\"> /r </div>
+            <div class=\"command desc\">reset board </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 "
 
@@ -41,8 +59,9 @@ class Display
       </div>"
   end
 
-  def render
 
+
+  def render
     board.grid.each_with_index do |row, row_idx|
       @html_response << "
       <div class='row'>

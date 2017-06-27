@@ -6,14 +6,20 @@ require_relative './lib/engine'
 require 'rack'
 require 'erb'
 class Game
-  attr_reader :board, :display, :p1, :p2
+  attr_reader :board, :display, :p1, :p2, :player_qty
   attr_accessor :current_player
-  def initialize
+  def initialize(player_qty)
     @board = Board.new
     @display = Display.new(@board)
-    @p1 = Engine.new(:black, @board)
+    if player_qty == 1
+      @p1 = Engine.new(:black, @board)
+    else
+      @p1 = Player.new(:black)
+    end
     @p2 = Player.new(:white)
+    @player_qty = player_qty
     @current_player = @p2
+
   end
 
   def game_over?
@@ -31,25 +37,37 @@ class Game
     @p1.handle_move
   end
 
+  def generate_response(start_pos, end_pos)
+    resp = {
+      'start_val' => self.board[start_pos].to_img,
+      'end_val' => self.board[end_pos].to_img,
+      'errors' => ""
+    }
+    if player_qty == 2
+      resp
+    else
+      engine_start, engine_end = engine_move
+      board.move_piece(engine_move, current_player.color)
+      swap_turn!
+      engine_resp = {
+        'engine_pos_start' => engine_start,
+        'engine_pos_end' => engine_end,
+        'engine_start' => self.board[engine_start].to_img,
+        'engine_end' => self.board[engine_end].to_img
+      }
+
+      resp.merge(engine_resp)
+    end
+  end
+
   def play_move(move)
     begin
       start_pos, end_pos = move
       board.move_piece(move, current_player.color)
       swap_turn!
-      engine_start, engine_end = engine_move
-      board.move_piece(engine_move, current_player.color)
-      swap_turn!
-      winner = game_over?
-      return {
-        'start_val' => self.board[start_pos].to_img,
-        'end_val' => self.board[end_pos].to_img,
-        'errors' => "",
-        'engine_pos_start' => engine_start,
-        'engine_pos_end' => engine_end,
-        'engine_start' => self.board[engine_start].to_img,
-        'engine_end' => self.board[engine_end].to_img,
-        'winner' => winner
-      }
+      response = generate_response(start_pos, end_pos)
+      response['winner'] = game_over?
+      return response
     rescue WrongColorError, NoStartPieceError, InvalidMoveError, InCheckError => e
       return {
         'errors' => e.message
@@ -101,53 +119,3 @@ class Game
     end
   end
 end
-require 'rack'
-
-
-def generate_html(board)
-  index = File.open('index.html')
-  index_arr = index.read.split('<body>')
-  index.close
-  return [index_arr[0], '<body>', board ,'</div>', index_arr[1]].join
-end
-
-game = Game.new
-not_rendered = 0
-app = Proc.new do |env|
-  req = Rack::Request.new(env)
-  res = Rack::Response.new
-
-  if req.request_method == "POST"
-    res['Content-Type'] = 'application/json'
-    move = JSON.parse(req.body.read)["move"]
-    # game.play_move(game.engine_move)
-
-    res.write(JSON.generate(game.play_move(move)))
-    res.finish
-elsif not_rendered == 0
-    not_rendered += 1
-    res['Content-Type'] = 'text/html'
-    my_test = generate_html(game.display.render)
-
-    res.write(my_test)
-    res.finish
-  else
-    res['Content-Type'] = 'text/html'
-    indexPage = File.open('index.html')
-    res.write(indexPage.read)
-    indexPage.close
-    res.finish
-  end
-end
-
-builder = Rack::Builder.new do
-  use Rack::Static, :urls => ["/assets/css", "/assets/images", "/assets/js"]
-  run app
-end
-
-
-
-Rack::Server.start(
-app: builder,
-Port: 3000
-)
