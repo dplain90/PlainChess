@@ -61,20 +61,21 @@ class App
         move = game.play_move(move).merge({players: @player_qty})
         res.write(JSON.generate(move))
         res.finish
-    elsif @rendered == 0
-        @rendered += 1
+      else
+    # elsif @rendered == 0
+        # @rendered += 1
         res['Content-Type'] = 'text/html'
         my_test = generate_html(game.display.render)
-
         res.write(my_test)
         res.finish
-      else
-        res['Content-Type'] = 'text/html'
-        indexPage = File.open('index.html')
-        res.write(indexPage.read)
-        indexPage.close
-        res.finish
       end
+      # else
+      #   res['Content-Type'] = 'text/html'
+      #   indexPage = File.open('index.html')
+      #   res.write(indexPage.read)
+      #   indexPage.close
+      #   res.finish
+      # end
     end
   end
 end
