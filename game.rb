@@ -1,6 +1,7 @@
 require_relative './lib/display'
 require_relative './lib/board'
 require_relative './lib/player'
+require_relative './lib/engine'
 
 require 'rack'
 require 'erb'
@@ -10,13 +11,14 @@ class Game
   def initialize
     @board = Board.new
     @display = Display.new(@board)
-    @p1 = Player.new(:black)
+    @p1 = Engine.new(:black, @board)
     @p2 = Player.new(:white)
     @current_player = @p2
   end
 
   def game_over?
     if self.black_checkmated?
+      puts "White wins!"
       return "White wins!"
     elsif self.white_checkmated?
       return "Black wins!"
@@ -25,16 +27,27 @@ class Game
     end
   end
 
+  def engine_move
+    @p1.handle_move
+  end
+
   def play_move(move)
     begin
       start_pos, end_pos = move
       board.move_piece(move, current_player.color)
+      swap_turn!
+      engine_start, engine_end = engine_move
+      board.move_piece(engine_move, current_player.color)
       swap_turn!
       winner = game_over?
       return {
         'start_val' => self.board[start_pos].to_img,
         'end_val' => self.board[end_pos].to_img,
         'errors' => "",
+        'engine_pos_start' => engine_start,
+        'engine_pos_end' => engine_end,
+        'engine_start' => self.board[engine_start].to_img,
+        'engine_end' => self.board[engine_end].to_img,
         'winner' => winner
       }
     rescue WrongColorError, NoStartPieceError, InvalidMoveError, InCheckError => e
@@ -107,6 +120,8 @@ app = Proc.new do |env|
   if req.request_method == "POST"
     res['Content-Type'] = 'application/json'
     move = JSON.parse(req.body.read)["move"]
+    # game.play_move(game.engine_move)
+
     res.write(JSON.generate(game.play_move(move)))
     res.finish
 elsif not_rendered == 0

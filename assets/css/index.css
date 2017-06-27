@@ -116,12 +116,14 @@ body {
   align-items: flex-start;
   justify-content: center;
 }
-.errors {
+.errors, .winner {
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   padding-left: 15px;
   padding-top: 5px;
 }
+
+
 
 #p {
   height: 70%;
@@ -165,7 +167,9 @@ div.space:hover {
   width: auto;
 
 }
-@media (max-width: 600px) {
+@media (max-width: 750px) {
+
+
   #messages {
     position: absolute;
     display: none;
@@ -180,10 +184,39 @@ div.space:hover {
     display: none;
   }
 
-  .board {
-    width: 100%;
-    align-items: flex-start;
+  .topHeader div:first-child {
+    width: 20px;
   }
 
-  
+  .board {
+    width: 100%;
+    align-items: center;
+  }
+}
+
+@media (max-width: 955px) {
+  .banner-title {
+    font-size: 36px;
+  }
+}
+
+
+@media (max-width: 882px) {
+  .banner-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 530px) {
+  .space {
+    height: 30px;
+    width: 30px;
+  }
+
+  .space img {
+    height: 80%;
+    width: auto;
+  }
+
+
 }

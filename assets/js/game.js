@@ -59,12 +59,15 @@ class Board {
 
   receiveMove(response) {
     if(response.errors === ""){
-      let {start_val, end_val} = response;
+      let {start_val, end_val, engine_start, engine_end, engine_pos_start, engine_pos_end} = response;
       if(response.winner !== ""){
         this.displayWinner(response.winner);
       } else {
       this.updateValue(this.move[0], start_val);
       this.updateValue(this.move[1], end_val);
+      this.updateValue(engine_pos_start, engine_start);
+      this.updateValue(engine_pos_end, engine_end);
+
       this.clearErrors();
       this.move = [];
       }

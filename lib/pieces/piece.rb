@@ -1,10 +1,12 @@
+
 class Piece
   @@black_pieces = []
   @@white_pieces = []
 
-  attr_accessor :symbol, :board, :color
+  attr_accessor :symbol, :board, :color, :active
 
   def initialize(symbol, board, color)
+    @active = true
     @symbol = symbol
     @board = board
     @color = color
@@ -15,8 +17,8 @@ class Piece
     color == :white ? @@white_pieces : @@black_pieces
   end
 
-  def self.all_moves(color)
-    Piece.all_pieces(color).map{ |piece| piece.moves }.flatten(1)
+  def self.all_moves(color, prc = Proc.new { |piece| piece.moves })
+    Piece.all_pieces(color).map{ |piece| prc.call(piece) }.flatten(1)
   end
 
   def to_str
@@ -41,6 +43,7 @@ class Piece
   end
 
   def same_color?(pos)
+    return false if pos == []
     board.color_of_position(pos) == @color
   end
 
@@ -49,6 +52,7 @@ class Piece
   end
 
   def candidates(pos, dir, results = [])
+    return [] if pos.nil?
     pos = calc_new_pos(pos, dir) if pos == position
     return results if off_board?(pos) || same_color?(pos)
     results << pos
@@ -57,6 +61,7 @@ class Piece
   end
 
   def calc_new_pos(pos, incr)
+    return [] if pos == nil
     pos.zip(incr).map {|num| num.inject(:+)}
   end
 
@@ -81,4 +86,7 @@ class Piece
     color == :white ? :black : :white
   end
 
+  def is_enemy?(piece)
+    enemy_color == piece.color
+  end
 end

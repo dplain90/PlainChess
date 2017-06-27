@@ -1,10 +1,11 @@
 require_relative 'piece'
 
 class King < Piece
-  attr_reader :directions, :color, :board
+  attr_reader :directions, :color, :board, :point_count
 
   def initialize(symbol, board, color)
     super(symbol, board, color)
+    @point_count = 20
     @directions = {
       up: [1, 0],
       down: [-1, 0],

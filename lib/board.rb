@@ -31,6 +31,7 @@ class Board
   end
 
   def color_of_position(pos)
+    return false if pos.nil?
     self[pos].color
   end
 
@@ -52,6 +53,9 @@ class Board
   def move_piece(pos, color)
     start_pos, end_pos = pos
     validate_move!(start_pos, end_pos, color)
+    if self[end_pos].color == enemy_color(color)
+      self[end_pos].active = false
+    end
     swap!(start_pos, end_pos)
   end
 
@@ -68,7 +72,7 @@ class Board
   end
 
   def valid_piece_move!(start_pos, end_pos)
-    puts self[start_pos].valid_moves
+
     raise InvalidMoveError.new "That piece can't move there! #{self[start_pos].valid_moves}" if !self[start_pos].valid_moves[end_pos]
   end
 
@@ -81,10 +85,31 @@ class Board
   end
 
   def result_in_check(pos, new_pos, color)
-    swap!(pos, new_pos)
+    taken_piece = switch!(pos, new_pos)
     outcome = in_check?(color)
-    swap!(new_pos, pos)
+    switch_back!(pos, new_pos, taken_piece)
     outcome
+  end
+
+  def switch_back!(pos, new_pos, taken_piece)
+    swap!(new_pos, pos)
+    taken_piece.active = true
+    self[new_pos] = taken_piece
+  end
+
+  def switch!(pos, new_pos)
+    if !null_piece?(new_pos)
+      taken_piece = self[new_pos]
+      taken_piece.active = false
+    else
+      taken_piece = NullPiece.instance
+    end
+    swap!(pos, new_pos)
+    taken_piece
+  end
+
+  def null_piece?(pos)
+    self[pos] == NullPiece.instance
   end
 
   def swap!(pos, new_pos)
@@ -106,9 +131,27 @@ class Board
     !all_pieces(color).any?{ |piece| safe_moves?(piece)}  && in_check?(color)
   end
 
+
   def in_check?(color)
     king = find_king(color).first
-    Piece.all_moves(king.enemy_color).include?(king.position)
+    king_pos = king.position
+    is_checked = false
+    checked_pieces = []
+    collect_checks = Proc.new do |piece|
+      if piece.moves.include?(king_pos)
+        if (piece.symbol == :p && !piece.invalid_pawn_check?(king_pos)) || piece.symbol != :p
+          checked_pieces << piece
+          is_checked = true
+        end
+      else
+    
+      end
+    end
+
+    Piece.all_moves(king.enemy_color, collect_checks)
+
+
+    is_checked
   end
 
   def all_pieces(color)
@@ -131,7 +174,6 @@ class Board
   end
 
   def populate_pawns
-
     pawn_rows = [[1, :black],[-2, :white]].each do |side|
       row_idx = side.first
       color = side.last
@@ -143,7 +185,6 @@ class Board
 
   def populate_other_pieces
     side = [[0, :black],[-1, :white]]
-    # side = [[0, :white],[-1, :black]]
       side.each do |side|
         row_idx = side.first
         color = side.last
