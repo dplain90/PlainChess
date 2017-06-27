@@ -80,26 +80,26 @@ class App
 end
 
 main = App.new
-builder = Rack::Builder.new do
-  use Rack::Static, :urls => ["/assets/css", "/assets/images", "/assets/js"]
-  map '/' do
-    run main.gameplay
-  end
-
-  map '/1p' do
-    run main.player_game(1)
-  end
-
-  map '/2p' do
-    run main.player_game(2)
-  end
-
-  map '/r' do
-    run main.reset
-  end
-end
-
-Rack::Server.start(
-app: builder,
-Port: 3000
-)
+# builder = Rack::Builder.new do
+#   use Rack::Static, :urls => ["/assets/css", "/assets/images", "/assets/js"]
+#   map '/' do
+#     run main.gameplay
+#   end
+#
+#   map '/1p' do
+#     run main.player_game(1)
+#   end
+#
+#   map '/2p' do
+#     run main.player_game(2)
+#   end
+#
+#   map '/r' do
+#     run main.reset
+#   end
+# end
+#
+# Rack::Server.start(
+# app: builder,
+# Port: 3000
+# )
