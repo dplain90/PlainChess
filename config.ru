@@ -1,7 +1,6 @@
 require_relative './app'
 require 'rack'
-
-main = App.new 
+main = App.new
 
 use Rack::Static, :urls => ["/assets/css", "/assets/images", "/assets/js"]
 map '/' do
@@ -14,8 +13,4 @@ end
 
 map '/2p' do
   run main.player_game(2)
-end
-
-map '/r' do
-  run main.reset
 end

@@ -6,18 +6,18 @@ require_relative './lib/engine'
 require 'rack'
 require 'erb'
 class Game
-  attr_reader :board, :display, :p1, :p2, :player_qty
+  attr_reader :board, :display, :p1, :p2, :p_qty
   attr_accessor :current_player
-  def initialize(player_qty)
+  def initialize(p_qty)
     @board = Board.new
     @display = Display.new(@board)
-    if player_qty == 1
+    if p_qty == 1
       @p1 = Engine.new(:black, @board)
     else
       @p1 = Player.new(:black)
     end
     @p2 = Player.new(:white)
-    @player_qty = player_qty
+    @p_qty = p_qty
     @current_player = @p2
 
   end
@@ -34,6 +34,7 @@ class Game
   end
 
   def engine_move
+    # @p1 = Engine.new(:black, @board)
     @p1.handle_move
   end
 
@@ -43,7 +44,7 @@ class Game
       'end_val' => self.board[end_pos].to_img,
       'errors' => ""
     }
-    if player_qty == 2
+    if p_qty != 1
       resp
     else
       engine_start, engine_end = engine_move
@@ -67,7 +68,7 @@ class Game
       swap_turn!
       response = generate_response(start_pos, end_pos)
       response['winner'] = game_over?
-      return response
+      response
     rescue WrongColorError, NoStartPieceError, InvalidMoveError, InCheckError => e
       return {
         'errors' => e.message

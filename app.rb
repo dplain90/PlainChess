@@ -2,13 +2,14 @@ require_relative './game'
 require 'rack'
 require 'erb'
 require 'byebug'
+require 'json'
 DEFAULT_PROMPT = " player game initiated, you are white. It's your move!"
 
 class App
   attr_accessor :game, :player_qty, :rendered
   def initialize
     @rendered = 0
-    @game = Game.new(1)
+    @game
     @player_qty
   end
 
@@ -28,13 +29,14 @@ class App
 
 
   def player_game(num, prompt = DEFAULT_PROMPT)
+    @player_qty = num
     Proc.new do |env|
       req = Rack::Request.new(env)
       res = Rack::Response.new
       num_str = num == 1 ? "One" : "Two"
       prompt_str = "#{num_str}" + prompt
-      @game = Game.new(num)
       @player_qty = num
+      @game = Game.new(num)
       html_resp = generate_html(@game.display.render)
       rendered_html = insert_error(prompt_str, html_resp)
       res['Content-Type'] = 'text/html'
@@ -45,10 +47,6 @@ class App
     end
   end
 
-  def reset
-    prompt = " player game reset. You are white. Your move!"
-    player_game(@player_qty, prompt)
-  end
 
   def gameplay
     Proc.new do |env|
@@ -62,45 +60,12 @@ class App
         res.write(JSON.generate(move))
         res.finish
       else
-    # elsif @rendered == 0
-        # @rendered += 1
+        game = Game.new(@player_qty)
         res['Content-Type'] = 'text/html'
         my_test = generate_html(game.display.render)
         res.write(my_test)
         res.finish
       end
-      # else
-      #   res['Content-Type'] = 'text/html'
-      #   indexPage = File.open('index.html')
-      #   res.write(indexPage.read)
-      #   indexPage.close
-      #   res.finish
-      # end
     end
   end
 end
-
-main = App.new
-# builder = Rack::Builder.new do
-#   use Rack::Static, :urls => ["/assets/css", "/assets/images", "/assets/js"]
-#   map '/' do
-#     run main.gameplay
-#   end
-#
-#   map '/1p' do
-#     run main.player_game(1)
-#   end
-#
-#   map '/2p' do
-#     run main.player_game(2)
-#   end
-#
-#   map '/r' do
-#     run main.reset
-#   end
-# end
-#
-# Rack::Server.start(
-# app: builder,
-# Port: 3000
-# )

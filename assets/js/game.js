@@ -34,6 +34,7 @@ class Board {
     this.updateMove = this.updateMove.bind(this);
     this.sendMove = this.sendMove.bind(this);
     this.receiveMove = this.receiveMove.bind(this);
+    this.players = 1;
     this.populateSpaces();
   }
 
@@ -50,9 +51,19 @@ class Board {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/');
     const data = { move: this.move }
+    if(this.players === 1) {
+      let loading = document.createElement("div");
+      loading.id = "loading"
+      loading.className = "errors";
+      loading.textContent = "Thinking.........";
+      this.messages.append(loading);
+    }
 
+    
     xhr.onload = () => {
-
+      if(this.players === 1) {
+        document.getElementById('loading').remove();
+      }
       this.receiveMove(JSON.parse(xhr.response));
     }
     xhr.send(JSON.stringify(data));
@@ -61,6 +72,7 @@ class Board {
   receiveMove(response) {
     if(response.errors === ""){
       let {start_val, end_val, engine_start, engine_end, engine_pos_start, engine_pos_end, players} = response;
+      this.players = players;
       if(response.winner !== ""){
         this.displayWinner(response.winner);
       } else {
@@ -128,10 +140,8 @@ class IOConsole {
         xhr.open('GET', e.currentTarget.value);
         xhr.onload = () => {
           window.location = xhr.responseURL;
-          console.log(xhr);
-          console.log(xhr.response);
         }
-        xhr.send();
+        xhr.send(toString(this.players));
       }
     });
   }

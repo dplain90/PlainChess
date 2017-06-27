@@ -16,10 +16,6 @@ TOP_BANNER = "
             <div class=\"command title\"> /2p </div>
             <div class=\"command\">2 player game</div>
           </li>
-          <li>
-            <div class=\"command title\"> /r </div>
-            <div class=\"command desc\">reset board </div>
-          </li>
         </ul>
       </div>
     </div>

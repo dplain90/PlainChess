@@ -1,6 +1,6 @@
 require_relative 'player'
 require_relative 'pieces/piece'
-require 'byebug'
+
 class Engine < Player
   attr_accessor :board, :moves, :top_move
   def initialize(color, board)
@@ -28,23 +28,13 @@ class Engine < Player
     if @top_move == []
       get_pieces(color).each do |piece|
         if piece.moves.length > 0
-          puts "Ok im here"
+      
           return [piece.position, piece.moves.first]
         end
       end
     end
-    # if space_move.nil?
-    #   get_pieces(color).each do |piece|
-    #     if piece.moves.length > 0
-    #       puts "BAM"
-    #       space_move = [piece.position, piece.moves.first]
-    #       puts space_move.first.to_s
-    #       puts space_move.last.to_s
-    #       return space_move
-    #     end
-    #   end
-    # end
-    puts @most_pts
+
+
     @top_move
   end
 
