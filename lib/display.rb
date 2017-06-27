@@ -1,5 +1,3 @@
-require 'colorize'
-require 'json'
 
 TOP_BANNER = "
   <div class=\"banner\">
