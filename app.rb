@@ -13,29 +13,6 @@ class App
     @rendered = 0
     @game = Game.new(1)
     @player_qty
-    # engine = Stockfish::Engine.new("./bin/stockfish-8-64")
-    # engine.multipv(3)
-    # fen = "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1"
-    # puts engine.analyze fen, { :depth => 12 }
-#     @stdin, @stdout, @stderr, @wait_threads = Open3.popen3(, "position fen )
-#
-#     @pid = @wait_threads[:pid]
-#     p @stdout.read
-#     p @stderr.read
-#     @stdin.close  # stdin, stdout and stderr should be closed explicitly in this form.
-# @stdout.close
-# @stderr.close
-    # @stdin.puts 'uci'
-    # line = @stdout.readline
-    # puts line
-    # Open3.pipeline_r("heroku run stockfish uci",
-    # "heroku run stockfish , "heroku run stockfish go depth 10") do |last_stdout, wait_threads|
-    #   last_stdout.each_line do |line|
-    #     puts last_stdout
-    #     puts line
-    #   end
-
-
   end
 
   def generate_html(board)

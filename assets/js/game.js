@@ -64,8 +64,7 @@ class Board {
       if(this.players === 1) {
         document.getElementById('loading').remove();
       }
-      console.log(xhr.response);
-      console.log(JSON.parse(xhr.response));
+
       this.receiveMove(JSON.parse(xhr.response));
     }
     xhr.send(JSON.stringify(data));
@@ -75,7 +74,7 @@ class Board {
     if(response.errors === ""){
       let {start_val, end_val, engine_start, engine_end, engine_pos_start, engine_pos_end, players, fen} = response;
 
-      window.fen = fen;
+
       this.players = players;
       if(response.winner !== ""){
         this.displayWinner(response.winner);

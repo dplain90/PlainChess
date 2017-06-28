@@ -72,7 +72,6 @@ class Board
     else
       self.two_stepper = nil
     end
-    puts self[end_pos]
     update_halfclock(piece, end_pos)
   end
 
