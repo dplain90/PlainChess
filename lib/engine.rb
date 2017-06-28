@@ -20,7 +20,7 @@ class Engine < Player
   end
 
   def handle_move(fen)
-    engine = Stockfish::Engine.new("/usr/local/bin/stockfish")
+    engine = Stockfish::Engine.new("bin/stockfish")
     puts engine.analyze fen, { :depth => 12 }
     @top_move = []
     @most_space = calc_space
