@@ -10,7 +10,6 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     rack (2.0.1)
-    ruby (0.1.0)
     slop (3.6.0)
     stockfish (0.3.1)
 
@@ -22,8 +21,10 @@ DEPENDENCIES
   json
   pry
   rack
-  ruby
   stockfish
+
+RUBY VERSION
+   ruby 2.3.3p222
 
 BUNDLED WITH
    1.15.1
