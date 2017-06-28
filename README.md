@@ -1,17 +1,36 @@
 Plain Chess
 =====
 
-Plain Chess is a lightweight Chess web-app, that cuts out all the toppings and gets right to the meat and potatoes. Ruby on the back-end, Rack serving as the webserver interface, with vanilla JS DOM manipulation & XHTML AJAX requests on the front-end.
+Plain Chess is a lightweight Chess web-app, that cuts out all the toppings and gets right to the meat and potatoes. Ruby on the back-end, Rack serving as the webserver interface, with JS on the front-end.
 
-How to Play:
----------------
-1. Clone or download repo and navigate to root directory.
-2. Start Rack Server by running ``` ruby game.rb ``` in console.
-3. Navigate to http://localhost:3000/ in your browser.
-4. Have fun!
+## Setup
 
-Implementation Details
+Chess Engine Setup
 ---------------
+Stockfish is used as the Chess Engine for the AI player. To work correctly, a Stockfish binary is called from the bin folder in the root directory.
+
+1. Go to [Stockfish](https://stockfishchess.org/download/) website and download the correct binary for the machine you will be running it on. Stockfish is open source :)
+
+2. Place the binary in the bin folder.
+
+3. Open lib > engine.rb and update the Engine's path.
+
+``` ruby
+@engine = Stockfish::Engine.new("~/bin/stockfish_8_x64")
+```
+
+Setup
+---------------
+1. Open the terminal and navigate to the root directory.
+2. Enter the following command to launch Rack: ``` rackup ```
+
+Communicating with Stockfish
+---------------
+Stockfish needs to know information about the position and it's opponent's move to complete it's analysis.
+
+The game uses Forsyth–Edwards Notation or FEN for this. You can find a primer on FEN [here](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation)
+
+## Implementation Details
 
 The primary goal with Plain Chess is to demonstrate a fully-functional Ruby implementation of Chess without all of the inapplicable extras that come with frameworks/libraries such as JQuery, React, & Rails.
 
@@ -80,6 +99,6 @@ setValue(val){
 Todos
 -----
 
-* [ ] Square Colors
-* [ ] Static Piece Images
-* [ ] Castling, Pawn Graduations, etc.
+* [ ] Pawn Graduations
+* [ ] Display for game moves
+* [ ] Analysis mode
