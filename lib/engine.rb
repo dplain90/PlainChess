@@ -9,6 +9,8 @@ class Engine < Player
     @moves = Piece.all_moves(color)
     @most_space = calc_space
     @most_pts = score
+    @engine = Stockfish::Engine.new("./bin/stockfish-8-64")
+    @engine.multipv(3)
   end
 
   def enemy_color
@@ -19,25 +21,21 @@ class Engine < Player
     get_moves(enemy_color)
   end
 
-  def handle_move(fen)
-    engine = Stockfish::Engine.new("/bin/stockfish")
-    puts engine.analyze fen, { :depth => 12 }
-    @top_move = []
-    @most_space = calc_space
-    @most_pts = score
-    create_space_move
-
-    if @top_move == []
-      get_pieces(color).each do |piece|
-        if piece.moves.length > 0
-
-          return [piece.position, piece.moves.first]
-        end
-      end
+  def decide_move(fen)
+    column_key = {}
+    ('a'..'h').to_a.each_with_index do |letter, i|
+      column_key[letter] = i
     end
 
+    best_move = @engine.analyze fen, { depth: 12 }
+    m = best_move.split('bestmove')[-1].split('ponder')[0].strip
+    start_pos = [ 8 - m[1].to_i, column_key[m[0]]]
+    end_pos = [ 8 - m[3].to_i, column_key[m[2]]]
+    [start_pos, end_pos]
+  end
 
-    @top_move
+  def handle_move(fen)
+    decide_move(fen)
   end
 
   def get_pieces(clr)
