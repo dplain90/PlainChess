@@ -9,7 +9,7 @@ class Engine < Player
     @moves = Piece.all_moves(color)
     @most_space = calc_space
     @most_pts = score
-    @engine = Stockfish::Engine.new("./bin/stockfish-8-64")
+    @engine = Stockfish::Engine.new("./bin/stockfish-8-x64")
     @engine.multipv(3)
   end
 
