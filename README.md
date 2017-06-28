@@ -3,10 +3,11 @@ Plain Chess
 
 Plain Chess is a lightweight Chess web-app, that cuts out all the toppings and gets right to the meat and potatoes. Ruby on the back-end, Rack serving as the webserver interface, with JS on the front-end.
 
-## Setup
-
-Chess Engine Setup
+Setup
 ---------------
+
+### Chess Engine Setup
+
 Stockfish is used as the Chess Engine for the AI player. To work correctly, a Stockfish binary is called from the bin folder in the root directory.
 
 1. Go to [Stockfish](https://stockfishchess.org/download/) website and download the correct binary for the machine you will be running it on. Stockfish is open source :)
@@ -18,24 +19,24 @@ Stockfish is used as the Chess Engine for the AI player. To work correctly, a St
 ``` ruby
 @engine = Stockfish::Engine.new("~/bin/stockfish_8_x64")
 ```
+### Communicating with Stockfish
 
-Setup
----------------
-1. Open the terminal and navigate to the root directory.
-2. Enter the following command to launch Rack: ``` rackup ```
-
-Communicating with Stockfish
----------------
 Stockfish needs to know information about the position and it's opponent's move to complete it's analysis.
 
 The game uses Forsyth–Edwards Notation or FEN for this. You can find a primer on FEN [here](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation)
 
-## Implementation Details
+### Rack Setup
+
+1. Open the terminal and navigate to the root directory.
+2. Enter the following command to launch Rack: ``` rackup ```
+
+
+Implementation Details
+---------------
 
 The primary goal with Plain Chess is to demonstrate a fully-functional Ruby implementation of Chess without all of the inapplicable extras that come with frameworks/libraries such as JQuery, React, & Rails.
 
-Back-End
----------------
+### Back-End
 
  Candidate moves for each piece on the board are provided by iterating over predefined sets of x,y increments for each class of piece, and then recursively compiling applicable positions.
 
@@ -63,8 +64,7 @@ Moves is responsible for iterating over each potential direction a piece can go 
 
   Candidates will collect positions that meet necessary criteria for a candidate move (space does not contain own color, is not out of bounds, etc.). This is a method on the parent class of Piece. Certain pieces have special requirements for determining candidate moves, such as the King, Pawn, & Knight. In these cases, the child class overrides this method with it's own criteria.
 
-Front-End
-----------
+### Front-End
 
 After the HTML is populated via Rack, events and AJAX calls are managed by two classes, Board & Space. Upon the initial render, a Board class is instantiated which conducts a nested loop to populate each DOM element with an instantiation of the Space class. The Space class sets up and handles the onClick events and holds it's designated DOM element as a prop.
 
