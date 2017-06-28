@@ -62,9 +62,9 @@ class App
         res.write(JSON.generate(outcome))
         res.finish
       else
-        game = Game.new(@player_qty)
+        @game = Game.new(@player_qty)
         res['Content-Type'] = 'text/html'
-        my_test = generate_html(game.display.render)
+        my_test = generate_html(@game.display.render)
         res.write(my_test)
         res.finish
       end
