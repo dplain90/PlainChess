@@ -82,6 +82,15 @@ class Piece
     board.find_position(self)
   end
 
+  def to_fen
+    return "" if self.symbol == :n
+    if self.color == :white
+      self.to_str.upcase
+    else
+      self.to_str
+    end
+  end
+
   def enemy_color
     color == :white ? :black : :white
   end

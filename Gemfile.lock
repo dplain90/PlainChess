@@ -11,6 +11,7 @@ GEM
       slop (~> 3.4)
     rack (2.0.1)
     slop (3.6.0)
+    stockfish (0.3.1)
 
 PLATFORMS
   ruby
@@ -20,6 +21,7 @@ DEPENDENCIES
   json
   pry
   rack
+  stockfish
 
 BUNDLED WITH
-   1.14.6
+   1.15.1

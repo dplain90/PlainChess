@@ -9,10 +9,12 @@ require_relative 'pieces/queen'
 require_relative 'pieces/rook'
 
 class Board
-  attr_accessor :grid, :display
+  attr_accessor :grid, :display, :two_stepper, :half_clock
 
   def initialize(grid = Board.default_grid)
     @grid = grid
+    @two_stepper = nil
+    @half_clock = 0
     populate_grid
   end
 
@@ -56,7 +58,34 @@ class Board
     if self[end_pos].color == enemy_color(color)
       self[end_pos].active = false
     end
+    update_special_moves(start_pos, end_pos)
     swap!(start_pos, end_pos)
+  end
+
+  def update_special_moves(start_pos, end_pos)
+    piece = self[start_pos]
+    update_castle(piece)
+    start_x = start_pos.first
+    end_x = end_pos.first
+    if piece.symbol == :p && (end_x - start_x).abs == 2
+      self.two_stepper = piece
+    else
+      self.two_stepper = nil
+    end
+    puts self[end_pos]
+    update_halfclock(piece, end_pos)
+  end
+
+  def update_halfclock(piece, end_pos)
+    if piece.symbol == :p || !null_piece?(end_pos)
+      self.half_clock = 0
+    else
+      self.half_clock += 1
+    end
+  end
+
+  def update_castle(piece)
+    piece.castle = false if piece.symbol == :k || piece.symbol == :r
   end
 
   def validate_move!(start_pos, end_pos, color)
@@ -131,6 +160,61 @@ class Board
     !all_pieces(color).any?{ |piece| safe_moves?(piece)}  && in_check?(color)
   end
 
+  def to_notation(pos)
+    rows = ('a'..'h').to_a.reverse
+    x, y = pos
+    rows[y] + (8 - x).to_s
+  end
+
+  def find_piece_type(color, sym)
+    Piece.all_pieces(color).select do |piece|
+      piece.symbol == sym && piece.active == true
+    end
+  end
+
+  def passant_fen
+    if !two_stepper.nil?
+      return to_notation(two_stepper.position)
+      two_stepper = nil
+    end
+
+    "-"
+  end
+
+  def castle_fen
+    fen = ""
+    [:black, :white].each do |color|
+      king = find_king(color).first
+
+      rooks = find_piece_type(color, :r)
+      rooks.each { |r| fen += r.castle_fen if r.castle_status(king) }
+    end
+
+    fen == "" ? "-" : fen
+  end
+
+  def check_for_castle(rook_pos, king_pos)
+    y, rx = rook_pos
+    kx = king_pos[1]
+    if rx > kx
+      x = kx
+      far_x = rx
+    else
+      x = rx
+      far_x = kx
+    end
+    incr = x + 1
+    until incr == far_x
+      pos = [incr, y]
+      square = self[pos]
+      blockers = Piece.all_moves(self[rook_pos].enemy_color)
+      if !null_piece?(pos) || blockers.include?(pos)
+        return false
+      end
+      incr += 1
+    end
+    true
+  end
 
   def in_check?(color)
     king = find_king(color).first
@@ -144,7 +228,7 @@ class Board
           is_checked = true
         end
       else
-    
+
       end
     end
 
@@ -183,6 +267,45 @@ class Board
     end
   end
 
+  def combined_fen(active_color, move_number)
+    [
+      board_fen,
+      active_color,
+      castle_fen,
+      passant_fen,
+      half_clock.to_s,
+      move_number
+    ].join(" ")
+  end
+
+  def board_fen
+    fen_str = ""
+    space_incr = 0
+    board.grid.each do |row|
+      row.each do |piece|
+        incr_string = space_incr.to_s
+        if piece.to_fen == ""
+          space_incr += 1
+        else
+          if space_incr > 0
+            fen_str += (incr_string + piece.to_fen)
+            space_incr = 0
+          else
+            fen_str += piece.to_fen if piece.to_fen != " "
+          end
+        end
+      end
+      incr_string = space_incr.to_s
+      fen_str += incr_string if space_incr > 0
+      space_incr = 0
+      fen_str += "\/"
+    end
+
+    fen_str.chop
+  end
+
+
+
   def populate_other_pieces
     side = [[0, :black],[-1, :white]]
       side.each do |side|
@@ -192,6 +315,7 @@ class Board
           case i
           when 0
             self[[row_idx, i]] = Rook.new(:r, board, color)
+            self[[row_idx, i]].castle = [row_idx, i]
           when 1
             self[[row_idx, i]] = Knight.new(:h, board, color)
           when 2
@@ -200,6 +324,7 @@ class Board
             self[[row_idx, i]] = Queen.new(:q, board, color)
           when 4
             self[[row_idx, i]] = King.new(:k, board, color)
+            self[[row_idx, i]].castle = [row_idx, i]
           when 5
             self[[row_idx, i]] = Bishop.new(:b, board, color)
           when 6

@@ -24,4 +24,8 @@ class Knight < Piece
     off_board?(new_pos) || same_color?(new_pos) ? [] : [new_pos]
   end
 
+  def to_fen
+    self.color == :white ? "N" : "n"
+  end
+
 end

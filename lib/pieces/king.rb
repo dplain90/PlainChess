@@ -1,10 +1,13 @@
 require_relative 'piece'
 
 class King < Piece
-  attr_reader :directions, :color, :board, :point_count
+  attr_reader :directions, :color, :board, :point_count, :active
+  attr_accessor :castle
 
   def initialize(symbol, board, color)
     super(symbol, board, color)
+    @active = true
+    @castle = true
     @point_count = 20
     @directions = {
       up: [1, 0],
@@ -22,5 +25,6 @@ class King < Piece
     new_pos = calc_new_pos(pos, dir)
     off_board?(new_pos) || same_color?(new_pos) ? [] : [new_pos]
   end
+
 
 end

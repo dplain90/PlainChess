@@ -1,6 +1,6 @@
 require_relative 'player'
 require_relative 'pieces/piece'
-
+require 'stockfish'
 class Engine < Player
   attr_accessor :board, :moves, :top_move
   def initialize(color, board)
@@ -19,7 +19,9 @@ class Engine < Player
     get_moves(enemy_color)
   end
 
-  def handle_move
+  def handle_move(fen)
+    engine = Stockfish::Engine.new("./bin/stockfish")
+    puts engine.analyze fen, { :depth => 12 }
     @top_move = []
     @most_space = calc_space
     @most_pts = score
@@ -28,7 +30,7 @@ class Engine < Player
     if @top_move == []
       get_pieces(color).each do |piece|
         if piece.moves.length > 0
-      
+
           return [piece.position, piece.moves.first]
         end
       end

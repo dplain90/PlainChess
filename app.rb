@@ -9,7 +9,7 @@ class App
   attr_accessor :game, :player_qty, :rendered
   def initialize
     @rendered = 0
-    @game
+    @game = Game.new(1)
     @player_qty
   end
 
@@ -56,8 +56,8 @@ class App
       if req.request_method == "POST"
         res['Content-Type'] = 'application/json'
         move = JSON.parse(req.body.read)["move"]
-        move = game.play_move(move).merge({players: @player_qty})
-        res.write(JSON.generate(move))
+        outcome = @game.play_move(move).merge({players: @player_qty})
+        res.write(JSON.generate(outcome))
         res.finish
       else
         game = Game.new(@player_qty)

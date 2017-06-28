@@ -7,7 +7,7 @@ require 'rack'
 require 'erb'
 class Game
   attr_reader :board, :display, :p1, :p2, :p_qty
-  attr_accessor :current_player
+  attr_accessor :current_player, :move_count
   def initialize(p_qty)
     @board = Board.new
     @display = Display.new(@board)
@@ -19,7 +19,11 @@ class Game
     @p2 = Player.new(:white)
     @p_qty = p_qty
     @current_player = @p2
+    @move_count = 0
+  end
 
+  def fen_str
+    board.combined_fen(self.current_player.to_fen, self.move_count.to_s)
   end
 
   def game_over?
@@ -35,21 +39,24 @@ class Game
 
   def engine_move
     # @p1 = Engine.new(:black, @board)
-    @p1.handle_move
+    @p1.handle_move(fen_str)
   end
 
   def generate_response(start_pos, end_pos)
     resp = {
       'start_val' => self.board[start_pos].to_img,
       'end_val' => self.board[end_pos].to_img,
-      'errors' => ""
+      'errors' => "",
+      'fen' => self.fen_str
     }
-    if p_qty != 1
+    if self.p_qty != 1
       resp
     else
       engine_start, engine_end = engine_move
       board.move_piece(engine_move, current_player.color)
+      count_moves
       swap_turn!
+      self.move_count += 1
       engine_resp = {
         'engine_pos_start' => engine_start,
         'engine_pos_end' => engine_end,
@@ -61,10 +68,17 @@ class Game
     end
   end
 
+  def count_moves
+    if current_player.color == :black
+      self.move_count += 1
+    end
+  end
+
   def play_move(move)
     begin
       start_pos, end_pos = move
       board.move_piece(move, current_player.color)
+      count_moves
       swap_turn!
       response = generate_response(start_pos, end_pos)
       response['winner'] = game_over?
